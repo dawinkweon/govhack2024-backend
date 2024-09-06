@@ -1,0 +1,52 @@
+openapi: 3.0.1
+info:
+  title: 2024GovhackBackend
+  version: v1
+paths:
+  /WeatherForecast:
+    get:
+      tags:
+        - WeatherForecast
+      operationId: GetWeatherForecast
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/GetPropertyResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPropertyResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/GetPropertyResponse'
+components:
+  schemas:
+    Card:
+      type: object
+      properties:
+        propertyDetails:
+          $ref: '#/components/schemas/PropertyDetails'
+        point:
+          $ref: '#/components/schemas/Point'
+      additionalProperties: false
+    GetPropertyResponse:
+      type: object
+      properties:
+        card:
+          $ref: '#/components/schemas/Card'
+      additionalProperties: false
+    Point:
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+      additionalProperties: false
+    PropertyDetails:
+      type: object
+      additionalProperties: false

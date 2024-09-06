@@ -1,0 +1,78 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/dawin.kweon/personal/govhack2024-backend/govhack2024-backend.csproj": {}
+  },
+  "projects": {
+    "/Users/dawin.kweon/personal/govhack2024-backend/govhack2024-backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/dawin.kweon/personal/govhack2024-backend/govhack2024-backend.csproj",
+        "projectName": "govhack2024-backend",
+        "projectPath": "/Users/dawin.kweon/personal/govhack2024-backend/govhack2024-backend.csproj",
+        "packagesPath": "/Users/dawin.kweon/.nuget/packages/",
+        "outputPath": "/Users/dawin.kweon/personal/govhack2024-backend/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/dawin.kweon/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Refit": {
+              "target": "Package",
+              "version": "[7.1.2, )"
+            },
+            "Refit.HttpClientFactory": {
+              "target": "Package",
+              "version": "[7.1.2, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.417/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
