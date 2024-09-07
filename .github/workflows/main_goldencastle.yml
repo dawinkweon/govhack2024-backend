@@ -22,7 +22,7 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Install tools
-        run: dotnet tool install
+        run: dotnet tool restore
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
