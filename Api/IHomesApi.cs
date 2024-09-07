@@ -14,4 +14,8 @@ public interface IHomesApi
     [Get("/property?url=/{city}/{suburb}/{streetNumber}-{address}/GKeek")]
     [Headers("Content-Type: application/json")]
     Task<FindPropertyResponse> FindProperty(string city, string suburb, string streetNumber, string address);
+    
+    [Get("/linz/boundary/point?lat={lat}&lon={lon}&street_number={streetNumber}")]
+    [Headers("Content-Type: application/json")]
+    Task<GetPropertyBoundariesResponse> GetPropertyBoundaries(string lat, string lon, string streetNumber);
 }

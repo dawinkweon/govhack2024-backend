@@ -6,7 +6,6 @@ using GoldenCastle.Govhack2024.Api;
 using GoldenCastle.Govhack2024.Model.Api;
 using GoldenCastle.Govhack2024.Model.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Result = GoldenCastle.Govhack2024.Model.Api.Result;
 
 namespace GoldenCastle.Govhack2024.Controllers;
 
@@ -28,43 +27,36 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("/Search")]
-    public async Task<GoldenCastle.Govhack2024.Model.Dto.ResultDto[]> Search([FromQuery] string address)
+    public async Task<IEnumerable<SearchPropertyResultDto>> Search([FromQuery] string address)
     {
-        Model.Api.SearchPropertyResponse apiResponse = await _homesApi.SearchProperty(address);
+        SearchPropertyResponse apiResponse = await _homesApi.SearchProperty(address);
         _logger.LogDebug("From the api: {}", JsonSerializer.Serialize(apiResponse));
 
-
-        var rss = apiResponse.Results.Where(result =>
-            {
-                return !string.IsNullOrEmpty(result.Title)
-                       && !string.IsNullOrEmpty(result.Address)
-                       && !string.IsNullOrEmpty(result.City)
-                       && result.StreetNumber.HasValue
-                       && !string.IsNullOrEmpty(result.Suburb);
-            })
-            .Select(async result =>
-            {
-                var property = await _homesApi.FindProperty(
-                    Normalise(result.City).ToLower().Replace(" ", "-"),
-                    Normalise(result.Suburb).ToLower().Replace(" ", "-"),
-                    result.StreetNumber.ToString().ToLower().Replace(" ", "-"),
-                    Normalise(result.Address).ToLower().Replace(" ", "-"));
-                var r = _mapper.Map<GoldenCastle.Govhack2024.Model.Dto.ResultDto>(result)!;
-                _logger.LogDebug("Got PROPERTY: {}", JsonSerializer.Serialize(property));
-
-                r.PropertyId = property.Card.PropertyId;
-                return r;
-            });
-        var res = await Task.WhenAll(rss);
-        _logger.LogDebug("Got properties: {}", JsonSerializer.Serialize(res));
-        return res;
+        return apiResponse.Results
+            .Where(IsValid)
+            .Select(result => _mapper.Map<SearchPropertyResultDto>(result)!);
     }
-    
-    [HttpGet("{id}")]
-    public async Task<GetPropertyDetailsResponseDto> Get(Guid id)
+
+    private bool IsValid(SearchPropertyResult searchPropertyResult)
     {
-        GetPropertyDetailsResponse property = await _homesGatewayApi.GetPropertyDetails(id.ToString());
-        return _mapper.Map<GetPropertyDetailsResponseDto>(property)!;
+        return !string.IsNullOrEmpty(searchPropertyResult.Title) && !string.IsNullOrEmpty(searchPropertyResult.Address) && !string.IsNullOrEmpty(searchPropertyResult.City) && searchPropertyResult.StreetNumber.HasValue && !string.IsNullOrEmpty(searchPropertyResult.Suburb);
+    }
+
+    [HttpPost("/GetDetails")]
+    public async Task<GetPropertyDetailsResponseDto> Get([FromBody] GetPropertyDetailsRequest request)
+    {
+        FindPropertyResponse property = await _homesApi.FindProperty(
+            Normalise(request.City).ToLower().Replace(" ", "-"),
+            Normalise(request.Suburb).ToLower().Replace(" ", "-"),
+            request.StreetNumber.ToString().ToLower().Replace(" ", "-"), 
+            Normalise(request.Address).ToLower().Replace(" ", "-"));
+        
+        GetPropertyDetailsResponse propertyDetails = await _homesGatewayApi.GetPropertyDetails(property.Card.PropertyId);
+
+        GetPropertyBoundariesResponse propertyBoundaries = await _homesApi.GetPropertyBoundaries(property.Card.Point.Lat.ToString(),
+            property.Card.Point.Lon.ToString(), request.StreetNumber.ToString());
+
+        return _mapper.Map<GetPropertyDetailsResponseDto>((property, propertyDetails, propertyBoundaries))!;
     }
     
     private static string Normalise(string value)

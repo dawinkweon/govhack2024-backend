@@ -5,10 +5,10 @@ namespace GoldenCastle.Govhack2024.Model.Api;
 public class SearchPropertyResponse
 {
     [JsonPropertyName("Results")]
-    public Result[] Results { get; set; }
+    public SearchPropertyResult[] Results { get; set; }
 }
 
-public class Result
+public class SearchPropertyResult
 {
     [JsonPropertyName("Title")]
     public string Title { get; set; }

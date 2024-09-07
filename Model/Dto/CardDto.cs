@@ -1,8 +1,8 @@
 namespace GoldenCastle.Govhack2024.Model.Api;
 
-public class Card
+public class CardDto
 {
     public string PropertyId { get; set; }
     public object PropertyDetails { get; set; }
-    public Point Point { get; set; }
+    public Point point { get; set; }
 }
