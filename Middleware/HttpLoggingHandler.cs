@@ -1,4 +1,4 @@
-namespace govhack2024_backend.Middlewares;
+namespace GoldenCastle.Govhack2024.Middleware;
 
 public class HttpLoggingHandler : DelegatingHandler
 {

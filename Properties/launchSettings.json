@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "govhack2024_backend": {
+    "GoldenCastle.Govhack2024": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

@@ -1,6 +1,8 @@
 using System.Text.Json;
-using govhack2024_backend.Api;
-using govhack2024_backend.Middlewares;
+using AutoMapper;
+using GoldenCastle.Govhack2024.Api;
+using GoldenCastle.Govhack2024.Middleware;
+using GoldenCastle.Govhack2024.Model.Api;
 using Microsoft.OpenApi.Models;
 using Refit;
 
@@ -22,6 +24,20 @@ builder.Services.AddRefitClient<IHomesApi>((_) => new RefitSettings
         => new HttpLoggingHandler(serviceProvider.GetRequiredService<ILogger<HttpLoggingHandler>>()))
     .Services.AddSingleton<HttpLoggingHandler>();
 
+builder.Services.AddRefitClient<IHomesGatewayApi>((_) => new RefitSettings
+    {
+        ContentSerializer = new SystemTextJsonContentSerializer(
+            new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
+            }
+        )
+    })
+    .ConfigureHttpClient(c => c.BaseAddress = new Uri(builder.Configuration.GetConnectionString("HomesGatewayApiUrl")))
+    .AddHttpMessageHandler(serviceProvider 
+        => new HttpLoggingHandler(serviceProvider.GetRequiredService<ILogger<HttpLoggingHandler>>()))
+    .Services.AddSingleton<HttpLoggingHandler>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,6 +45,14 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "2024GovhackBackend", Version = "v1" });
 });
+
+builder.Services.AddAutoMapper(typeof(PropertyProfile));
+
+var mapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<PropertyProfile>();
+});
+mapperConfig.AssertConfigurationIsValid();
 
 var app = builder.Build();
 

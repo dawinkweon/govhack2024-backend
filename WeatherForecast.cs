@@ -1,4 +1,4 @@
-namespace govhack2024_backend;
+namespace GoldenCastle.Govhack2024;
 
 public class WeatherForecast
 {
