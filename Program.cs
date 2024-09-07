@@ -2,9 +2,10 @@ using System.Text.Json;
 using AutoMapper;
 using GoldenCastle.Govhack2024.Api;
 using GoldenCastle.Govhack2024.Middleware;
-using GoldenCastle.Govhack2024.Model.Api;
 using Microsoft.OpenApi.Models;
 using Refit;
+
+const string allowAllOrigins = nameof(allowAllOrigins);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,15 @@ builder.Services.AddRefitClient<IHomesGatewayApi>((_) => new RefitSettings
     .Services.AddSingleton<HttpLoggingHandler>();
 
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowAllOrigins,
+        policy =>
+        {
+            policy.AllowAnyOrigin();
+        });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
