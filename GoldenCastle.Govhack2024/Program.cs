@@ -2,12 +2,14 @@ using System.Text.Json;
 using AutoMapper;
 using GoldenCastle.Govhack2024.Api;
 using GoldenCastle.Govhack2024.Middleware;
+using GoldenCastle.Govhack2024.Service;
 using Microsoft.OpenApi.Models;
 using Refit;
 
 const string allowAllOrigins = nameof(allowAllOrigins);
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -38,6 +40,8 @@ builder.Services.AddRefitClient<IHomesGatewayApi>((_) => new RefitSettings
     .AddHttpMessageHandler(serviceProvider 
         => new HttpLoggingHandler(serviceProvider.GetRequiredService<ILogger<HttpLoggingHandler>>()))
     .Services.AddSingleton<HttpLoggingHandler>();
+
+builder.Services.AddSingleton<IPropertyService, PropertyService>();
 
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
